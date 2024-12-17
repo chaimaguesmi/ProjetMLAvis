@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+import re
 
 # Fonction pour scraper les avis d'une URL spécifique
 def scrape_reviews(url):
@@ -39,6 +40,10 @@ def scrape_reviews(url):
     else:
         print(f"Erreur lors de l'accès à {url} : {response.status_code}")
         return []
+    
+def is_valid_url(line):
+    pattern = re.compile(r'https?://[^\s]+')  # Détecte les URL commençant par http:// ou https://
+    return bool(pattern.match(line))
 
 
 # Fonction pour lire les URLs depuis un fichier CSV
@@ -48,7 +53,8 @@ def get_urls_from_csv(file_name):
         with open(file_name, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                urls.append(row["URL du produit"])  # Le nom de la colonne doit correspondre à celui du CSV
+                if is_valid_url(row["URL du produit"]):
+                  urls.append(row["URL du produit"])  # Le nom de la colonne doit correspondre à celui du CSV
     except Exception as e:
         print(f"Erreur lors de la lecture du fichier CSV : {e}")
     return urls
@@ -56,7 +62,7 @@ def get_urls_from_csv(file_name):
 # Fonction principale
 def main():
     # Lire les URLs depuis le fichier CSV
-    csv_file = "produits_category_all_pages.csv"  # Assurez-vous que le fichier produits.csv est au même endroit que ce script
+    csv_file = "produits_category_all_pages2.csv"  # Assurez-vous que le fichier produits.csv est au même endroit que ce script
     urls = get_urls_from_csv(csv_file)
     
     # Liste pour stocker tous les avis
@@ -68,7 +74,7 @@ def main():
         all_reviews.extend(reviews)  # Ajouter les avis pour cet URL à la liste globale
 
     # Sauvegarder tous les avis dans un fichier CSV
-    output_file = "reviews_product_category.csv"
+    output_file = "reviews_product_category2.csv"
     if all_reviews:  # Vérifier s'il y a des avis
         with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["Note", "Commentaire"], delimiter=";")

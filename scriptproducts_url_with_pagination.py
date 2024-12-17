@@ -49,11 +49,11 @@ def main():
     # Écriture dans un fichier CSV
     if produits_details:  # Vérifier si des produits ont été trouvés
         keys = produits_details[0].keys()
-        with open('produits_category_all_pages.csv', 'w', newline='', encoding='utf-8') as output_file:
+        with open('produits_category_all_pages2.csv', 'a', newline='', encoding='utf-8') as output_file:
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(produits_details)
-        print("Fichier CSV généré : produits_category_all_pages.csv")
+        print("Fichier CSV généré : produits_category_all_pages2.csv")
     else:
         print("Aucun produit n'a été trouvé pour cette catégorie.")
 
